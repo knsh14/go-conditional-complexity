@@ -1,4 +1,4 @@
-package ast
+package finder
 
 import "go/ast"
 

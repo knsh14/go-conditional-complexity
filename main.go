@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	goast "go/ast"
+	"go/ast"
 	"go/parser"
 	"go/token"
 	"os"
@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/knsh14/go-conditional-complexity/analyzer"
-	"github.com/knsh14/go-conditional-complexity/ast"
+	"github.com/knsh14/go-conditional-complexity/finder"
 )
 
 var (
@@ -57,7 +57,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		ast.FindFunc(f, func(fd *goast.FuncDecl) error {
+		finder.FindFunc(f, func(fd *ast.FuncDecl) error {
 			count, err := analyzer.Calc(fd)
 			if err != nil {
 				return err
