@@ -13,7 +13,7 @@ func TestCalc(t *testing.T) {
 		expected  []int
 	}{
 		"not complex": {"./testdata/no-complex.go", []int{1}},
-		"if":          {"./testdata/if.go", []int{2}},
+		"if":          {"./testdata/if.go", []int{2, 3}},
 		"for":         {"./testdata/for.go", []int{2}},
 		"switch":      {"./testdata/switch.go", []int{2}},
 	}
