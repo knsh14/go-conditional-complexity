@@ -1,12 +1,23 @@
 package analyzer
 
-import "go/ast"
-import "go/token"
+import (
+	"go/ast"
+	"go/token"
+)
 
-// Calc returns conditional complexity of function
-func Calc(decl *ast.FuncDecl) (int, error) {
+// CalcFuncDecl returns conditional complexity of decleared function
+func CalcFuncDecl(decl *ast.FuncDecl) (int, error) {
+	return calc(decl)
+}
+
+// CalcFuncLit returns conditional complexity of function literal
+func CalcFuncLit(lit *ast.FuncLit) (int, error) {
+	return calc(lit)
+}
+
+func calc(root ast.Node) (int, error) {
 	count := 1
-	ast.Inspect(decl, func(node ast.Node) bool {
+	ast.Inspect(root, func(node ast.Node) bool {
 		switch n := node.(type) {
 		case *ast.IfStmt:
 			count++
