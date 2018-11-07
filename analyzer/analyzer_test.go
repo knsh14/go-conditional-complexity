@@ -13,9 +13,10 @@ func TestCalc(t *testing.T) {
 		expected  []int
 	}{
 		"not complex": {"./testdata/no-complex.go", []int{1}},
-		"if":          {"./testdata/if.go", []int{2, 3}},
+		"if":          {"./testdata/if.go", []int{2, 3, 3, 3, 2}},
 		"for":         {"./testdata/for.go", []int{2}},
-		"switch":      {"./testdata/switch.go", []int{2}},
+		"switch":      {"./testdata/switch.go", []int{2, 3, 3, 3}},
+		"select":      {"./testdata/select.go", []int{2}},
 	}
 
 	for k, c := range cases {
@@ -35,7 +36,7 @@ func TestCalc(t *testing.T) {
 					t.Fatal(err)
 				}
 				if n != c.expected[i] {
-					t.Error("Complexity is not expected")
+					t.Errorf("case %s returns unexpected complexity. expected=%d, got=%d", fd.Name.Name, c.expected[i], n)
 				}
 			}
 		})
