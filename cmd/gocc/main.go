@@ -30,11 +30,6 @@ func main() {
 		}
 	}
 
-	// ap, err := filepath.Abs(p)
-	// if err != nil {
-	// 	fmt.Fprintf(os.Stderr, "failed to get Absolute path of %s\n", p)
-	// 	return
-	// }
 	if _, err := os.Stat(p); os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, "%s is not exist\n", p)
 		return
