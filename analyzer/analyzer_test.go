@@ -31,7 +31,7 @@ func TestCalcFuncDecl(t *testing.T) {
 				if !ok {
 					t.Fatal("decl is not FuncDecl")
 				}
-				n, err := CalcFuncDecl(fd)
+				n, err := Calc(d)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -72,11 +72,11 @@ return true
 			if err != nil {
 				t.Fatal(err)
 			}
-			lit, ok := v.(*ast.FuncLit)
+			_, ok := v.(*ast.FuncLit)
 			if !ok {
 				t.Fatal("input is not function")
 			}
-			n, err := CalcFuncLit(lit)
+			n, err := Calc(v)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -5,17 +5,8 @@ import (
 	"go/token"
 )
 
-// CalcFuncDecl returns conditional complexity of decleared function
-func CalcFuncDecl(decl *ast.FuncDecl) (int, error) {
-	return calc(decl)
-}
-
-// CalcFuncLit returns conditional complexity of function literal
-func CalcFuncLit(lit *ast.FuncLit) (int, error) {
-	return calc(lit)
-}
-
-func calc(root ast.Node) (int, error) {
+// Calc counts conditional complexity of node
+func Calc(root ast.Node) (int, error) {
 	count := 1
 	ast.Inspect(root, func(node ast.Node) bool {
 		switch n := node.(type) {

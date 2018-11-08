@@ -18,24 +18,13 @@ func Check(path string, threshold int) ([]*result.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	finder.FindFuncDecl(f, func(fd *ast.FuncDecl) error {
-		count, err := analyzer.CalcFuncDecl(fd)
+	finder.FindFunc(f, func(fn ast.Node) error {
+		count, err := analyzer.Calc(fn)
 		if err != nil {
 			return err
 		}
 		if count >= threshold {
-			m := result.NewFuncDecl(fset, path, fd, count)
-			messages = append(messages, m)
-		}
-		return nil
-	})
-	finder.FindFuncLiteral(f, func(fl *ast.FuncLit) error {
-		count, err := analyzer.CalcFuncLit(fl)
-		if err != nil {
-			return err
-		}
-		if count >= threshold {
-			m := result.NewFuncLit(fset, path, fl, count)
+			m := result.New(fset, path, fn, count)
 			messages = append(messages, m)
 		}
 		return nil

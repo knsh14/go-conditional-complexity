@@ -24,7 +24,7 @@ func TestFunc(t *testing.T) {
 			}
 
 			count := 0
-			err = FindFunc(f, func(n *ast.FuncDecl) error {
+			err = FindFunc(f, func(n ast.Node) error {
 				count++
 				return nil
 			})
