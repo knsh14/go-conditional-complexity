@@ -10,8 +10,8 @@ import (
 	"github.com/knsh14/go-conditional-complexity/result"
 )
 
-// Check returns message of too complex function
-func Check(path string, threshold int) ([]*result.Message, error) {
+// Check returns message of function
+func Check(path string) ([]*result.Message, error) {
 	var messages []*result.Message
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, path, nil, 0)
@@ -23,10 +23,8 @@ func Check(path string, threshold int) ([]*result.Message, error) {
 		if err != nil {
 			return err
 		}
-		if count >= threshold {
-			m := result.New(fset, path, fn, count)
-			messages = append(messages, m)
-		}
+		m := result.New(fset, path, fn, count)
+		messages = append(messages, m)
 		return nil
 	})
 	return messages, nil
