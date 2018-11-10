@@ -51,7 +51,7 @@ func main() {
 		excludePattern = p
 	}
 	var allmessages []*result.Score
-	filepath.Walk(p, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(p, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
@@ -69,6 +69,10 @@ func main() {
 		allmessages = append(allmessages, msgs...)
 		return nil
 	})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, err.Error())
+		return
+	}
 	msgs := result.FilterByComplexity(allmessages, threshold)
 	if top > 0 {
 		for _, m := range result.FilterMostComplex(msgs, top) {
