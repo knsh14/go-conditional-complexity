@@ -22,7 +22,7 @@ func init() {
 	flag.IntVar(&threshold, "max", 12, "threshold to notice")
 	flag.StringVar(&exclude, "exclude", "", "exclude file path pattern")
 	flag.IntVar(&top, "top", 0, "show highest complicated functions")
-	flag.BoolVar(&avg, "avg", false, "show average of all")
+	flag.BoolVar(&avg, "avg", false, "show average of all functions and functions which is more complex than threshold")
 }
 
 func main() {
@@ -50,7 +50,7 @@ func main() {
 		}
 		excludePattern = p
 	}
-	var allmessages []*result.Score
+	var allScore []*result.Score
 	err := filepath.Walk(p, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
@@ -62,30 +62,34 @@ func main() {
 			return nil
 		}
 
-		msgs, err := analyzer.Check(path)
+		socres, err := analyzer.Check(path)
 		if err != nil {
 			return err
 		}
-		allmessages = append(allmessages, msgs...)
+		allScore = append(allScore, socres...)
 		return nil
 	})
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
 		return
 	}
-	msgs := result.FilterByComplexity(allmessages, threshold)
+	output(allScore)
+}
+
+func output(scores []*result.Score) {
+	s := result.FilterByComplexity(scores, threshold)
 	if top > 0 {
-		for _, m := range result.FilterMostComplex(msgs, top) {
+		for _, m := range result.FilterMostComplex(s, top) {
 			fmt.Fprint(os.Stdout, m)
 		}
 	} else {
-		for _, m := range msgs {
+		for _, m := range s {
 			fmt.Fprint(os.Stdout, m)
 		}
 	}
 	if avg {
-		allAvg := result.Average(allmessages)
-		filteredAvg := result.Average(msgs)
+		allAvg := result.Average(scores)
+		filteredAvg := result.Average(s)
 		fmt.Fprintf(os.Stdout, "All Funcs Average:%f, Complex Funcs Average:%f\n", allAvg, filteredAvg)
 	}
 }
