@@ -2,47 +2,30 @@ package analyzer
 
 import (
 	"go/ast"
+	"go/parser"
 	"go/token"
+
+	"github.com/knsh14/go-conditional-complexity/complexity"
+	"github.com/knsh14/go-conditional-complexity/finder"
+	"github.com/knsh14/go-conditional-complexity/result"
 )
 
-// Calc counts conditional complexity of node
-func Calc(root ast.Node) (int, error) {
-	count := 1
-	ast.Inspect(root, func(node ast.Node) bool {
-		switch n := node.(type) {
-		case *ast.IfStmt:
-			count++
-			count += checkAndOrNode(n.Cond)
-		case *ast.ForStmt:
-			count++
-		case *ast.CaseClause:
-			// if n.List is nil. it means default clause.
-			if n.List == nil {
-				count++
-				break
-			}
-			count += len(n.List)
-			for _, l := range n.List {
-				count += checkAndOrNode(l)
-			}
-		case *ast.CommClause:
-			count++
+// Check returns message of function
+func Check(path string) ([]*result.Score, error) {
+	var messages []*result.Score
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, path, nil, 0)
+	if err != nil {
+		return nil, err
+	}
+	finder.FindFunc(f, func(fn ast.Node) error {
+		count, err := complexity.Count(fn)
+		if err != nil {
+			return err
 		}
-		return true
+		m := result.New(fset, path, fn, count)
+		messages = append(messages, m)
+		return nil
 	})
-	return count, nil
-}
-
-func checkAndOrNode(n ast.Node) int {
-	count := 0
-	ast.Inspect(n, func(node ast.Node) bool {
-		switch n := node.(type) {
-		case *ast.BinaryExpr:
-			if n.Op == token.LAND || n.Op == token.LOR {
-				count++
-			}
-		}
-		return true
-	})
-	return count
+	return messages, nil
 }

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/knsh14/go-conditional-complexity"
+	"github.com/knsh14/go-conditional-complexity/analyzer"
 	"github.com/knsh14/go-conditional-complexity/result"
 )
 
@@ -50,7 +50,7 @@ func main() {
 		}
 		excludePattern = p
 	}
-	var allmessages []*result.Message
+	var allmessages []*result.Score
 	filepath.Walk(p, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
@@ -62,7 +62,7 @@ func main() {
 			return nil
 		}
 
-		msgs, err := complexity.Check(path)
+		msgs, err := analyzer.Check(path)
 		if err != nil {
 			return err
 		}
@@ -71,8 +71,11 @@ func main() {
 	})
 	msgs := result.FilterByComplexity(allmessages, threshold)
 	if top > 0 {
-
 		for _, m := range result.FilterMostComplex(msgs, top) {
+			fmt.Fprint(os.Stdout, m)
+		}
+	} else {
+		for _, m := range msgs {
 			fmt.Fprint(os.Stdout, m)
 		}
 	}

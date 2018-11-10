@@ -1,4 +1,4 @@
-package analyzer
+package complexity
 
 import (
 	"go/ast"

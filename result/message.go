@@ -8,27 +8,26 @@ import (
 	"sort"
 )
 
-type byComplexity []*Message
+// Score to output result
+type Score struct {
+	path       string
+	line       int
+	name       string
+	complexity int
+}
+
+func (s *Score) String() string {
+	return fmt.Sprintf("%s:%d func %s complexity=%d\n", s.path, s.line, s.name, s.complexity)
+}
+
+type byComplexity []*Score
 
 func (bc byComplexity) Len() int           { return len(bc) }
 func (bc byComplexity) Swap(i, j int)      { bc[i], bc[j] = bc[j], bc[i] }
 func (bc byComplexity) Less(i, j int) bool { return bc[i].complexity > bc[j].complexity }
 
-// Message to output result
-type Message struct {
-	fset       *token.FileSet
-	path       string
-	name       string
-	position   token.Pos
-	complexity int
-}
-
-func (m *Message) String() string {
-	return fmt.Sprintf("%s:%d func %s complexity=%d\n", m.path, m.fset.Position(m.position).Line, m.name, m.complexity)
-}
-
 // New returns result info for Function
-func New(fset *token.FileSet, p string, n ast.Node, c int) *Message {
+func New(fset *token.FileSet, p string, n ast.Node, c int) *Score {
 	funcName := "literal"
 	if fd, ok := n.(*ast.FuncDecl); ok {
 		var buf bytes.Buffer
@@ -50,18 +49,17 @@ func New(fset *token.FileSet, p string, n ast.Node, c int) *Message {
 		buf.WriteString(" " + fd.Name.Name)
 		funcName = buf.String()
 	}
-	return &Message{
-		fset:       fset,
+	return &Score{
 		path:       p,
+		line:       fset.Position(n.Pos()).Line,
 		name:       funcName,
-		position:   n.Pos(),
 		complexity: c,
 	}
 }
 
 // FilterByComplexity returns more complex functions than threshold
-func FilterByComplexity(msgs []*Message, threshold int) []*Message {
-	var ms []*Message
+func FilterByComplexity(msgs []*Score, threshold int) []*Score {
+	var ms []*Score
 	for _, m := range msgs {
 		if m.complexity > threshold {
 			ms = append(ms, m)
@@ -71,7 +69,7 @@ func FilterByComplexity(msgs []*Message, threshold int) []*Message {
 }
 
 // FilterMostComplex returns Most N th complex functions
-func FilterMostComplex(msgs []*Message, num int) []*Message {
+func FilterMostComplex(msgs []*Score, num int) []*Score {
 	sort.Sort(byComplexity(msgs))
 	if len(msgs) < num {
 		return msgs
@@ -80,7 +78,7 @@ func FilterMostComplex(msgs []*Message, num int) []*Message {
 }
 
 // Average returns average complexity of input messages
-func Average(msgs []*Message) float64 {
+func Average(msgs []*Score) float64 {
 	var total float64
 	for _, m := range msgs {
 		total += float64(m.complexity)
