@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"regexp"
 
-	"github.com/knsh14/go-conditional-complexity/analyzer"
+	"github.com/knsh14/go-conditional-complexity/inspector"
 	"github.com/knsh14/go-conditional-complexity/result"
 )
 
@@ -62,7 +62,7 @@ func main() {
 			return nil
 		}
 
-		socres, err := analyzer.Check(path)
+		socres, err := inspector.Run(path)
 		if err != nil {
 			return err
 		}

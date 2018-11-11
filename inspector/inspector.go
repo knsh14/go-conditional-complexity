@@ -1,4 +1,4 @@
-package analyzer
+package inspector
 
 import (
 	"go/ast"
@@ -10,8 +10,8 @@ import (
 	"github.com/knsh14/go-conditional-complexity/result"
 )
 
-// Check returns message of function
-func Check(path string) ([]*result.Score, error) {
+// Run returns message of function
+func Run(path string) ([]*result.Score, error) {
 	var messages []*result.Score
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, path, nil, 0)
