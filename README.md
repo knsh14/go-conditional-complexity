@@ -25,3 +25,9 @@ output most complicated functions
 
 ## -avg
 output average complexity for all functions and filtered functions if this flag is set.
+
+## ARG
+path to check complexity.  
+checks all go files under input directory recursive.
+
+if no path is passed. checks current directory.
