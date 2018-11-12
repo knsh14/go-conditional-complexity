@@ -16,7 +16,8 @@ conditional complexity is index for how function is complex and hard to understa
 `
 
 var (
-	FlagSet flag.FlagSet
+	FlagSet   *flag.FlagSet
+	threshold int
 )
 
 func init() {
@@ -27,23 +28,23 @@ func init() {
 var Analyzer = &analysis.Analyzer{
 	Name:  "conditional complexity",
 	Doc:   doc,
-	Flags: nil,
+	Flags: *FlagSet,
 	Run:   run,
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	for _, f := range pass.Files {
-
 		finder.FindFunc(f, func(fn ast.Node) error {
 			count, err := complexity.Count(fn)
 			if err != nil {
 				return err
 			}
 			if threshold < count {
-				m := result.New(fset, path, fn, count)
-				pass.Reportf(fn.Pos(), m)
+				m := result.New(pass.Fset, "", fn, count)
+				pass.Reportf(fn.Pos(), m.String())
 			}
 			return nil
 		})
 	}
+	return nil, nil
 }
