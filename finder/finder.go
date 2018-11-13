@@ -1,6 +1,10 @@
 package finder
 
-import "go/ast"
+import (
+	"go/ast"
+
+	"github.com/pkg/errors"
+)
 
 // FindFunc apply passed function to function node.
 func FindFunc(n *ast.File, f func(ast.Node) error) error {
@@ -18,5 +22,5 @@ func FindFunc(n *ast.File, f func(ast.Node) error) error {
 		}
 		return true
 	})
-	return err
+	return errors.Wrap(err, "failed to find function")
 }
