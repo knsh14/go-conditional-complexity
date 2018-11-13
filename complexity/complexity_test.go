@@ -17,6 +17,7 @@ func TestCalcFuncDecl(t *testing.T) {
 		"for":         {"./testdata/for.go", []int{2}},
 		"switch":      {"./testdata/switch.go", []int{2, 3, 3, 3}},
 		"select":      {"./testdata/select.go", []int{2}},
+		"literal":     {"./testdata/literal.go", []int{1}},
 	}
 
 	for k, c := range cases {
@@ -31,7 +32,7 @@ func TestCalcFuncDecl(t *testing.T) {
 				if !ok {
 					t.Fatal("decl is not FuncDecl")
 				}
-				n, err := Calc(d)
+				n, err := Count(d)
 				if err != nil {
 					t.Fatal(err)
 				}
@@ -76,7 +77,7 @@ return true
 			if !ok {
 				t.Fatal("input is not function")
 			}
-			n, err := Calc(v)
+			n, err := Count(v)
 			if err != nil {
 				t.Fatal(err)
 			}

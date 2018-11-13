@@ -34,6 +34,10 @@ func Count(root ast.Node) (int, error) {
 			}
 		case *ast.CommClause:
 			count++
+		case *ast.FuncLit:
+			if node != root {
+				return false
+			}
 		}
 		return true
 	})
