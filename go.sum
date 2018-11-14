@@ -1,0 +1,4 @@
+github.com/pkg/errors v0.8.0 h1:WdK/asTD0HN+q6hsWO3/vpuAkAr+tw6aNJNDFFf0+qw=
+github.com/pkg/errors v0.8.0/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
+golang.org/x/tools v0.0.0-20181114145209-99072bc9d7ad h1:dl7DLKSCbdSzZQb9r+2i1iuztII8IK8dZr6F8kGQids=
+golang.org/x/tools v0.0.0-20181114145209-99072bc9d7ad/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
