@@ -34,8 +34,10 @@ func New(fset *token.FileSet, p string, n ast.Node, c int) *Score {
 		if fd.Recv != nil {
 			buf.WriteString("(")
 			for _, r := range fd.Recv.List {
-				buf.WriteString(r.Names[0].Name)
-				buf.WriteString(" ")
+				if len(r.Names) > 0 {
+					buf.WriteString(r.Names[0].Name)
+					buf.WriteString(" ")
+				}
 				if t, ok := r.Type.(*ast.StarExpr); ok {
 					buf.WriteString("*")
 					buf.WriteString(t.X.(*ast.Ident).Name)
