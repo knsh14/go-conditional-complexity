@@ -5,9 +5,10 @@ import (
 	"go/ast"
 
 	"github.com/knsh14/go-conditional-complexity/complexity"
-	"github.com/knsh14/go-conditional-complexity/finder"
 	"github.com/knsh14/go-conditional-complexity/result"
 	"golang.org/x/tools/go/analysis"
+	"golang.org/x/tools/go/analysis/passes/inspect"
+	"golang.org/x/tools/go/ast/inspector"
 )
 
 const doc = `checks conditional complexity
@@ -33,18 +34,23 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	for _, f := range pass.Files {
-		finder.FindFunc(f, func(fn ast.Node) error {
-			count, err := complexity.Count(fn)
-			if err != nil {
-				return err
-			}
-			if threshold < count {
-				m := result.New(pass.Fset, "", fn, count)
-				pass.Reportf(fn.Pos(), m.String())
-			}
-			return nil
-		})
+
+	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	nodeFilter := []ast.Node{
+		(*ast.FuncDecl)(nil),
+		(*ast.FuncLit)(nil),
 	}
+
+	inspect.Preorder(nodeFilter, func(n ast.Node) {
+		count, err := complexity.Count(n)
+		if err != nil {
+			pass.Reportf(n.Pos(), "failed to count: %s", err.Error())
+			return
+		}
+		if threshold < count {
+			m := result.New(pass.Fset, "", n, count)
+			pass.Reportf(n.Pos(), m.String())
+		}
+	})
 	return nil, nil
 }
