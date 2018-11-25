@@ -1,7 +1,6 @@
-package gocc
+package analysis
 
 import (
-	"flag"
 	"go/ast"
 
 	"github.com/knsh14/go-conditional-complexity/complexity"
@@ -16,21 +15,17 @@ const doc = `checks conditional complexity
 conditional complexity is index for how function is complex and hard to understand.
 `
 
-var (
-	FlagSet   *flag.FlagSet
-	threshold int
-)
-
-func init() {
-	FlagSet = flag.NewFlagSet("gocc", flag.ExitOnError)
-	FlagSet.IntVar(&threshold, "max", 12, "threshold to notice")
-}
+var threshold int
 
 var Analyzer = &analysis.Analyzer{
-	Name:  "conditional complexity",
-	Doc:   doc,
-	Flags: *FlagSet,
-	Run:   run,
+	Name:     "conditional complexity",
+	Doc:      doc,
+	Run:      run,
+	Requires: []*analysis.Analyzer{inspect.Analyzer},
+}
+
+func init() {
+	Analyzer.Flags.IntVar(&threshold, "max", 0, "threshold complexity to notice")
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
