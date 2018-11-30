@@ -46,9 +46,9 @@ func New(fset *token.FileSet, p string, n ast.Node, c int) *Score {
 					buf.WriteString(t.Name)
 				}
 			}
-			buf.WriteString(")")
+			buf.WriteString(") ")
 		}
-		buf.WriteString(" " + fd.Name.Name)
+		buf.WriteString(fd.Name.Name)
 		funcName = buf.String()
 	}
 	return &Score{

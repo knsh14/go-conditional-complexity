@@ -2,6 +2,8 @@ package analysis
 
 import (
 	"go/ast"
+	"os"
+	"path/filepath"
 
 	"github.com/knsh14/go-conditional-complexity/complexity"
 	"github.com/knsh14/go-conditional-complexity/result"
@@ -43,7 +45,19 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			return
 		}
 		if threshold < count {
-			m := result.New(pass.Fset, "", n, count)
+			fn := pass.Fset.PositionFor(n.Pos(), false).Filename
+			wd, err := os.Getwd()
+			if err != nil {
+				pass.Reportf(n.Pos(), "failed to get working dir: %s", err.Error())
+				return
+			}
+			rel, err := filepath.Rel(wd, fn)
+			if err != nil {
+				pass.Reportf(n.Pos(), "failed to relative path from %s to %s: %s", wd, fn, err.Error())
+				return
+			}
+
+			m := result.New(pass.Fset, rel, n, count)
 			pass.Reportf(n.Pos(), m.String())
 		}
 	})
