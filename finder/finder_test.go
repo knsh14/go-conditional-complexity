@@ -12,7 +12,9 @@ func TestFunc(t *testing.T) {
 		input    string
 		expected int
 	}{
-		"simple": {"./testdata/simple.go", 1},
+		"simple":          {"./testdata/simple.go", 1},
+		"no func":         {"./testdata/nofunc.go", 0},
+		"contain literal": {"./testdata/funcliteral.go", 2},
 	}
 
 	for k, c := range cases {
