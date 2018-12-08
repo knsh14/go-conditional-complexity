@@ -20,7 +20,7 @@ conditional complexity is index for how function is complex and hard to understa
 var threshold int
 
 var Analyzer = &analysis.Analyzer{
-	Name:     "conditional complexity",
+	Name:     "conditionalcomplexity",
 	Doc:      doc,
 	Run:      run,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
