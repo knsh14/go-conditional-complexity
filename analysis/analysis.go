@@ -58,7 +58,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			}
 
 			m := result.New(pass.Fset, rel, n, count)
-			pass.Reportf(n.Pos(), m.String())
+			pass.Reportf(n.Pos(), m.AnalysisResult())
 		}
 	})
 	return nil, nil

@@ -20,6 +20,10 @@ func (s *Score) String() string {
 	return fmt.Sprintf("%s:%d func %s complexity=%d\n", s.path, s.line, s.name, s.complexity)
 }
 
+func (s *Score) AnalysisResult() string {
+	return fmt.Sprintf("func %s complexity=%d", s.name, s.complexity)
+}
+
 type byComplexity []*Score
 
 func (bc byComplexity) Len() int           { return len(bc) }

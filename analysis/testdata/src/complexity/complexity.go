@@ -1,6 +1,6 @@
 package main
 
-func GetOrdinalSuffix(n int) string { // want `testdata/src/complexity/complexity.go:3 func GetOrdinalSuffix complexity=5`
+func GetOrdinalSuffix(n int) string { // want `func GetOrdinalSuffix complexity=5`
 	switch n % 10 {
 	case 1:
 		return "st"
